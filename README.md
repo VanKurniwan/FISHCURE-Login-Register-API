@@ -17,14 +17,14 @@ Jalankan perintah berikut untuk menginstal dan menggunakan versi Node.js yang te
 nvm install 21.7.3
 nvm use 21.7.3
 ```
-### 3. clone project ini
+### 3. Clone project ini
 
-### 4. jalankan MySQL & Apache melalui XAMPP atau platform lain
+### 4. Jalankan MySQL & Apache melalui XAMPP atau platform lain
 
-### 5. buka localhost/phpmyadmin
+### 5. Buka localhost/phpmyadmin
 
-### 6. buat database bernama 'user_db'
+### 6. Buat database bernama 'user_db'
 
-### 7. import sql file yg telah disediakan dalam project yaitu 'login_info.sql'
+### 7. Import sql file yg telah disediakan dalam project yaitu 'user_db.sql'
 
-### 8. jalankan project dengan 'npm run start' melalui terminal
+### 8. Jalankan project dengan 'npm run start' melalui terminal

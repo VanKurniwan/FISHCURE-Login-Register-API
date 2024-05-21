@@ -1,4 +1,4 @@
-const { registerUserHandler, loginUserHandler, getUserHandler } = require("./handler");
+const { registerUserHandler, loginUserHandler } = require("./handler");
 
 const routes = [
     {
@@ -10,15 +10,18 @@ const routes = [
     {
         // verifikasi login user
         method: 'POST',
-        path: '/login/{userID}',
+        path: '/login',
         handler: loginUserHandler
     },
-    {
-        // Mengambil data user
-        method: 'GET',
-        path: '/{userID}',
-        handler: getUserHandler
-    }
+    // Mengambil data user
+    // {
+
+    //     method: 'GET',
+    //     path: '/get/{userID}',
+    //     handler: getUserHandler
+    // }
+
+    // jika user lupa password
 ];
 
 module.exports = routes;

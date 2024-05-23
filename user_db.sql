@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2024 at 10:22 AM
+-- Generation Time: May 23, 2024 at 06:02 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -28,17 +28,17 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `login_info` (
-  `id_user` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `otp` varchar(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `login_info`
 --
 
-INSERT INTO `login_info` (`id_user`, `email`, `password`) VALUES
-('1', 'test@gmail.com', 'testpassword');
+INSERT INTO `login_info` (`email`, `password`, `otp`) VALUES
+('ivankurniawan474@gmail.com', '$2b$13$p/s5ZjiKuRfGahF.hVt6quatKsH4OQc5IkGumYd8oHt4SCnvsD09m', 'lgguuV');
 
 --
 -- Indexes for dumped tables
@@ -48,7 +48,7 @@ INSERT INTO `login_info` (`id_user`, `email`, `password`) VALUES
 -- Indexes for table `login_info`
 --
 ALTER TABLE `login_info`
-  ADD PRIMARY KEY (`id_user`);
+  ADD PRIMARY KEY (`email`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

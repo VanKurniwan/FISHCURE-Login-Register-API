@@ -1,5 +1,8 @@
+require('dotenv').config();
+
 const bcrypt = require("bcrypt");
 const { nanoid } = require("nanoid");
+const nodemailer = require("nodemailer");
 const { insertQuery, selectAQuery } = require("./db_query");
 
 // menuliskan data yang dikirim aplikasi ke database
@@ -22,10 +25,8 @@ const registerUserHandler = async (request, h) => {
         }
 
         // menyimpan user data ke database
-        const idUser = nanoid(16);
         const hashPassword = await bcrypt.hash(password, 13);
         const data = {
-            id_user: idUser,
             email: email,
             password: hashPassword
         };
@@ -36,7 +37,7 @@ const registerUserHandler = async (request, h) => {
         const response = h.response({
             status: 'success',
             message: 'User berhasil ditambahkan',
-            data: { id_user: idUser }
+            data: { email: email }
         });
 
         response.code(201);
@@ -57,11 +58,10 @@ const loginUserHandler = async (request, h) => {
         const sql = `SELECT * FROM login_info WHERE email = '${email}'`;
         const result = await selectAQuery(sql);
 
-        // cek jika data ditemukan
         if (result < 1) {
             const response = h.response({
                 status: 'failed',
-                message: 'Email atau Password yang dimasukkan salah',
+                message: 'Email atau Password yang dimasukkan salah'
             });
 
             response.code(401);
@@ -76,23 +76,161 @@ const loginUserHandler = async (request, h) => {
             const response = h.response({
                 status: 'success',
                 message: 'User berhasil login',
-                data: {
-                    id_user: user.id_user,
-                    email: user.email
-                }
+                data: { email: user.email }
             });
 
             response.code(201);
             return response;
         }
+
+        const response = h.response({
+            status: 'failed',
+            message: 'Email atau Password yang dimasukkan salah'
+        });
+
+        response.code(401);
+        return response;
+
     } catch (err) {
         console.log("Error:", err);
         return h.response({ message: "Server error" }).code(500);
     }
 };
 
-// mengambil data user dari database
-// const getUserHandler = (request, h) => {
-// };
+// mengirimkan kode otp ke email ketika lupa password
+const otpSendHandler = async (request, h) => {
+    try {
+        const { email } = request.payload;
 
-module.exports = { registerUserHandler, loginUserHandler };
+        // validate email
+        const sql = `SELECT * FROM login_info WHERE email = '${email}'`;
+        const result = await selectAQuery(sql);
+
+        if (result < 1) {
+            const response = h.response({
+                status: 'failed',
+                message: 'Email yang anda masukkan belum melakukan register'
+            });
+
+            response.code(401);
+            return response;
+        }
+
+        //generate otp
+        const otp = nanoid(6);
+
+        // send email
+        let config = {
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
+            }
+        }
+
+        let transporter = nodemailer.createTransport(config);
+
+        transporter.sendMail({
+            from: process.env.EMAIL,
+            to: email,
+            subject: "FISHCURE - Reset Password Request",
+            text: `Kode OTP anda : ${otp}`,
+            html: `<b>Kode OTP anda : ${otp} </b>`
+        }).catch(err => {
+            console.log("Error:", err);
+            return h.response({ message: "Server error" }).code(500);
+        });
+
+        // save to database
+        const data = {
+            otp: otp
+        };
+
+        const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
+        insertQuery(sqlInsert, data);
+
+        // return success
+        const response = h.response({
+            status: 'success',
+            message: 'Kode OTP berhasil dikirimkan',
+            data: { otp: otp }
+        });
+
+        response.code(201);
+        return response;
+
+    } catch (err) {
+        console.log("Error:", err);
+        return h.response({ message: "Server error" }).code(500);
+    }
+};
+
+// mengkonfirmasi kode otp yang dimasukka pengguna
+const otpAuthHandler = async (request, h) => {
+    try {
+        const { email, otp } = request.payload;
+
+        const sql = `SELECT * FROM login_info WHERE email = '${email}' && otp = '${otp}'`;
+        const result = await selectAQuery(sql);
+
+        console.log(result);
+
+        if (result[0] !== undefined) {
+            const data = {
+                otp: ''
+            };
+            const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
+            insertQuery(sqlInsert, data);
+
+            const response = h.response({
+                status: 'success',
+                message: 'Kode OTP telah sesuai',
+                data: { otp: otp }
+            });
+
+            response.code(201);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'failed',
+            message: 'Kode yang anda masukkan salah'
+        });
+
+        response.code(401);
+        return response;
+
+    } catch (err) {
+        console.log("Error:", err);
+        return h.response({ message: "Server error" }).code(500);
+    }
+}
+
+// update password pengguna
+const updatePasswordHandler = async (request, h) => {
+    try {
+        const { email, newPassword } = request.payload;
+        const hashPassword = await bcrypt.hash(newPassword, 13);
+
+        // update database
+        const data = {
+            password: hashPassword
+        };
+        const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
+        insertQuery(sqlInsert, data);
+
+        const response = h.response({
+            status: 'success',
+            message: 'Password berhasil diperbarui',
+            data: { email: email }
+        });
+
+        response.code(201);
+        return response;
+    } catch (err) {
+        console.log("Error:", err);
+        return h.response({ message: "Server error" }).code(500);
+    }
+}
+
+module.exports = { registerUserHandler, loginUserHandler, otpSendHandler, otpAuthHandler, updatePasswordHandler };

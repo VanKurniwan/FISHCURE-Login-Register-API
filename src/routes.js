@@ -1,4 +1,4 @@
-const { registerUserHandler, loginUserHandler } = require("./handler");
+const { registerUserHandler, loginUserHandler, otpSendHandler, otpAuthHandler, updatePasswordHandler } = require("./handler");
 
 const routes = [
     {
@@ -13,15 +13,24 @@ const routes = [
         path: '/login',
         handler: loginUserHandler
     },
-    // Mengambil data user
-    // {
-
-    //     method: 'GET',
-    //     path: '/get/{userID}',
-    //     handler: getUserHandler
-    // }
-
-    // jika user lupa password
+    {
+        // mengirim kode OTP
+        method: 'POST',
+        path: '/sendOtp',
+        handler: otpSendHandler
+    },
+    {
+        // autentifikasi input otp
+        method: 'POST',
+        path: '/authOtp',
+        handler: otpAuthHandler
+    },
+    {
+        // ganti password
+        method: 'POST',
+        path: '/updatePassword',
+        handler: updatePasswordHandler
+    }
 ];
 
 module.exports = routes;

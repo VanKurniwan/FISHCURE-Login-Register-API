@@ -1,30 +1,149 @@
-# FISHCURE-Login-Register-API
- Login & Register API for Capstone App Project
+# Guide menggunakan API LOGIN & REGISTER 🔒🔑:
 
-Berikut adalah langkah-langkah untuk memulai menggunakan proyek ini.
+Base url : ?
 
-## Langkah Mulai Menggunakan Proyek
+---
 
-### 1. Buka Windows PowerShell
+## Register
 
-Buka Windows PowerShell untuk menjalankan perintah yang diperlukan.
-
-### 2. Instal dan Gunakan Node.js Versi 21.7.3
-
-Jalankan perintah berikut untuk menginstal dan menggunakan versi Node.js yang tepat:
-
-```Windows Powershell
-nvm install 21.7.3
-nvm use 21.7.3
 ```
-### 3. Clone project ini
+/register?email=[email user]&password=[password user]
+```
 
-### 4. Jalankan MySQL & Apache melalui XAMPP atau platform lain
+### list response dari server :
 
-### 5. Buka localhost/phpmyadmin
+- ketika berhasil :
 
-### 6. Buat database bernama 'user_db'
+```
+{
+    "status": "success",
+    "message": "User berhasil ditambahkan",
+    "data": {
+        "email": "[email user]"
+    }
+}
+```
 
-### 7. Import sql file yg telah disediakan dalam project yaitu 'user_db.sql'
+- ketika email sudah digunakan :
 
-### 8. Jalankan project dengan 'npm run start' melalui terminal
+```
+{
+    "status": "failed",
+    "message": "Email sudah digunakan"
+}
+```
+
+---
+
+## Login
+
+```
+/login?email=[email user]&password=[password user]
+```
+
+### list response dari server :
+
+- ketika berhasil :
+
+```
+{
+    "status": "success",
+    "message": "User berhasil login",
+    "data": {
+        "email": "[email user]"
+    }
+}
+```
+
+- ketika gagal :
+
+```
+{
+    "status": "failed",
+    "message": "Email atau Password yang dimasukkan salah"
+}
+```
+
+---
+
+## Mengirim kode OTP ke email user
+
+```
+/sendOtp?email=[email user]
+```
+
+### list response dari server :
+
+- ketika berhasil :
+
+```
+{
+    "status": "success",
+    "message": "Kode OTP berhasil dikirimkan",
+    "data": {
+        "otp": "[kode otp user]"
+    }
+}
+```
+
+- ketika email belum melakukan register :
+
+```
+{
+    "status": "failed",
+    "message": "Email yang anda masukkan belum melakukan register"
+}
+```
+
+---
+
+## Melakukan autentikasi kode OTP user
+
+```
+/authOtp?email=[email user]&otp=[kode otp user]
+```
+
+### list response dari server :
+
+- ketika berhasil :
+
+```
+{
+    "status": "success",
+    "message": "Kode OTP telah sesuai",
+    "data": {
+        "email": "[email user]"
+    }
+}
+```
+
+- ketika kode otp tidak sesuai :
+
+```
+{
+    "status": "failed",
+    "message": "Kode yang anda masukkan salah"
+}
+```
+
+---
+
+## Ganti password user
+
+```
+/updatePassword?email=[email user]&newPassword=[password baru user]
+```
+
+### list response dari server :
+
+- ketika berhasil :
+
+```
+{
+    "status": "success",
+    "message": "Password berhasil diperbarui",
+    "data": {
+        "email": "[email user]"
+    }
+}
+```

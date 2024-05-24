@@ -8,7 +8,7 @@ const { insertQuery, selectAQuery } = require("./db_query");
 // menuliskan data yang dikirim aplikasi ke database
 const registerUserHandler = async (request, h) => {
     try {
-        const { email, password } = request.payload;
+        const { email, password } = request.query;
 
         // cek jika email sudah digunakan
         const sqlSelect = `SELECT * FROM login_info WHERE email = '${email}'`;
@@ -52,7 +52,7 @@ const registerUserHandler = async (request, h) => {
 // memastikan username & password sesuai dengan database
 const loginUserHandler = async (request, h) => {
     try {
-        const { email, password } = request.payload;
+        const { email, password } = request.query;
 
         // mengambil data dari database
         const sql = `SELECT * FROM login_info WHERE email = '${email}'`;
@@ -100,7 +100,7 @@ const loginUserHandler = async (request, h) => {
 // mengirimkan kode otp ke email ketika lupa password
 const otpSendHandler = async (request, h) => {
     try {
-        const { email } = request.payload;
+        const { email } = request.query;
 
         // validate email
         const sql = `SELECT * FROM login_info WHERE email = '${email}'`;
@@ -168,12 +168,10 @@ const otpSendHandler = async (request, h) => {
 // mengkonfirmasi kode otp yang dimasukka pengguna
 const otpAuthHandler = async (request, h) => {
     try {
-        const { email, otp } = request.payload;
+        const { email, otp } = request.query;
 
         const sql = `SELECT * FROM login_info WHERE email = '${email}' && otp = '${otp}'`;
         const result = await selectAQuery(sql);
-
-        console.log(result);
 
         if (result[0] !== undefined) {
             const data = {
@@ -185,7 +183,7 @@ const otpAuthHandler = async (request, h) => {
             const response = h.response({
                 status: 'success',
                 message: 'Kode OTP telah sesuai',
-                data: { otp: otp }
+                data: { email: email }
             });
 
             response.code(201);
@@ -209,7 +207,7 @@ const otpAuthHandler = async (request, h) => {
 // update password pengguna
 const updatePasswordHandler = async (request, h) => {
     try {
-        const { email, newPassword } = request.payload;
+        const { email, newPassword } = request.query;
         const hashPassword = await bcrypt.hash(newPassword, 13);
 
         // update database

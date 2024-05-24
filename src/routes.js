@@ -3,31 +3,31 @@ const { registerUserHandler, loginUserHandler, otpSendHandler, otpAuthHandler, u
 const routes = [
     {
         // menyimpan data register user
-        method: 'POST',
+        method: 'GET',
         path: '/register',
         handler: registerUserHandler
     },
     {
         // verifikasi login user
-        method: 'POST',
+        method: 'GET',
         path: '/login',
         handler: loginUserHandler
     },
     {
         // mengirim kode OTP
-        method: 'POST',
+        method: 'GET',
         path: '/sendOtp',
         handler: otpSendHandler
     },
     {
         // autentifikasi input otp
-        method: 'POST',
+        method: 'GET',
         path: '/authOtp',
         handler: otpAuthHandler
     },
     {
         // ganti password
-        method: 'POST',
+        method: 'GET',
         path: '/updatePassword',
         handler: updatePasswordHandler
     }

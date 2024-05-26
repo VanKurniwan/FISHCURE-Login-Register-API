@@ -1,6 +1,6 @@
 # Guide menggunakan API LOGIN & REGISTER 🔒🔑:
 
-Base url : ?
+Base url : wait for deployment
 
 ---
 

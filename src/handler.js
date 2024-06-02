@@ -32,7 +32,7 @@ const registerUserHandler = async (request, h) => {
         };
 
         const sqlInsert = 'INSERT INTO login_info SET ?';
-        insertQuery(sqlInsert, data);
+        await insertQuery(sqlInsert, data);
 
         const response = h.response({
             status: 'success',
@@ -147,7 +147,7 @@ const otpSendHandler = async (request, h) => {
         };
 
         const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
-        insertQuery(sqlInsert, data);
+        await insertQuery(sqlInsert, data);
 
         // return success
         const response = h.response({
@@ -178,7 +178,7 @@ const otpAuthHandler = async (request, h) => {
                 otp: ''
             };
             const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
-            insertQuery(sqlInsert, data);
+            await insertQuery(sqlInsert, data);
 
             const response = h.response({
                 status: 'success',
@@ -215,7 +215,7 @@ const updatePasswordHandler = async (request, h) => {
             password: hashPassword
         };
         const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
-        insertQuery(sqlInsert, data);
+        await insertQuery(sqlInsert, data);
 
         const response = h.response({
             status: 'success',

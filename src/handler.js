@@ -8,7 +8,7 @@ const { insertQuery, selectAQuery } = require("./db_query");
 // menuliskan data yang dikirim aplikasi ke database
 const registerUserHandler = async (request, h) => {
     try {
-        const { email, password } = request.query;
+        const { email, password } = request.payload;
 
         // cek jika email sudah digunakan
         const sqlSelect = `SELECT * FROM login_info WHERE email = '${email}'`;
@@ -32,7 +32,7 @@ const registerUserHandler = async (request, h) => {
         };
 
         const sqlInsert = 'INSERT INTO login_info SET ?';
-        insertQuery(sqlInsert, data);
+        await insertQuery(sqlInsert, data);
 
         const response = h.response({
             status: 'success',
@@ -52,7 +52,7 @@ const registerUserHandler = async (request, h) => {
 // memastikan username & password sesuai dengan database
 const loginUserHandler = async (request, h) => {
     try {
-        const { email, password } = request.query;
+        const { email, password } = request.payload;
 
         // mengambil data dari database
         const sql = `SELECT * FROM login_info WHERE email = '${email}'`;
@@ -100,7 +100,7 @@ const loginUserHandler = async (request, h) => {
 // mengirimkan kode otp ke email ketika lupa password
 const otpSendHandler = async (request, h) => {
     try {
-        const { email } = request.query;
+        const { email } = request.payload;
 
         // validate email
         const sql = `SELECT * FROM login_info WHERE email = '${email}'`;
@@ -147,7 +147,7 @@ const otpSendHandler = async (request, h) => {
         };
 
         const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
-        insertQuery(sqlInsert, data);
+        await insertQuery(sqlInsert, data);
 
         // return success
         const response = h.response({
@@ -168,7 +168,7 @@ const otpSendHandler = async (request, h) => {
 // mengkonfirmasi kode otp yang dimasukka pengguna
 const otpAuthHandler = async (request, h) => {
     try {
-        const { email, otp } = request.query;
+        const { email, otp } = request.payload;
 
         const sql = `SELECT * FROM login_info WHERE email = '${email}' && otp = '${otp}'`;
         const result = await selectAQuery(sql);
@@ -178,7 +178,7 @@ const otpAuthHandler = async (request, h) => {
                 otp: ''
             };
             const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
-            insertQuery(sqlInsert, data);
+            await insertQuery(sqlInsert, data);
 
             const response = h.response({
                 status: 'success',
@@ -207,7 +207,7 @@ const otpAuthHandler = async (request, h) => {
 // update password pengguna
 const updatePasswordHandler = async (request, h) => {
     try {
-        const { email, newPassword } = request.query;
+        const { email, newPassword } = request.payload;
         const hashPassword = await bcrypt.hash(newPassword, 13);
 
         // update database
@@ -215,7 +215,7 @@ const updatePasswordHandler = async (request, h) => {
             password: hashPassword
         };
         const sqlInsert = `UPDATE login_info SET ? WHERE email = '${email}'`;
-        insertQuery(sqlInsert, data);
+        await insertQuery(sqlInsert, data);
 
         const response = h.response({
             status: 'success',

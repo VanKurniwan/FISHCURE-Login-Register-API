@@ -6,8 +6,19 @@ Base url : wait for deployment
 
 ## Register
 
+url
+
 ```
-/register?email=[email user]&password=[password user]
+/register
+```
+
+request payload data :
+
+```
+{
+    "email" : "[user email]",
+    "password" : "[user password]"
+}
 ```
 
 ### list response dari server :
@@ -37,8 +48,19 @@ Base url : wait for deployment
 
 ## Login
 
+url
+
 ```
-/login?email=[email user]&password=[password user]
+/login
+```
+
+request payload data :
+
+```
+{
+    "email" : "[user email]",
+    "password" : "[user password]"
+}
 ```
 
 ### list response dari server :
@@ -68,8 +90,18 @@ Base url : wait for deployment
 
 ## Mengirim kode OTP ke email user
 
+url
+
 ```
-/sendOtp?email=[email user]
+/sendOtp
+```
+
+request payload data :
+
+```
+{
+    "password" : "[user password]"
+}
 ```
 
 ### list response dari server :
@@ -99,8 +131,19 @@ Base url : wait for deployment
 
 ## Melakukan autentikasi kode OTP user
 
+url
+
 ```
-/authOtp?email=[email user]&otp=[kode otp user]
+/authOtp
+```
+
+request payload data :
+
+```
+{
+    "email" : "[user email]",
+    "otp" : "[user otp code]"
+}
 ```
 
 ### list response dari server :
@@ -130,8 +173,19 @@ Base url : wait for deployment
 
 ## Ganti password user
 
+url
+
 ```
-/updatePassword?email=[email user]&newPassword=[password baru user]
+/updatePassword
+```
+
+request payload data :
+
+```
+{
+    "email" : "[user email]",
+    "newPassword" : "[user new password]"
+}
 ```
 
 ### list response dari server :
